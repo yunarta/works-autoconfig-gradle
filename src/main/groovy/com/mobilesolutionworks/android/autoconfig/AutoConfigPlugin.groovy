@@ -41,7 +41,7 @@ public class AutoConfigPlugin implements Plugin<Project> {
         def writable = new File(tmpDir).canWrite()
 
         def repositoryXml = new File(tmpDir + File.separator + 'auto-configure.repository.xml')
-        def addOnXml = new File(tmpDir + File.v + 'auto-configure.addon.xml')
+        def addOnXml = new File(tmpDir + File.separator + 'auto-configure.addon.xml')
 
         def downloadRepository = !repositoryXml.exists() || repositoryXml.lastModified() + (24 * 60 * 60) < System.currentTimeMillis()
         def downloadAddOn = !addOnXml.exists() || addOnXml.lastModified() + (24 * 60 * 60) < System.currentTimeMillis()
@@ -166,7 +166,7 @@ public class AutoConfigPlugin implements Plugin<Project> {
                 autoCompileSdk = platformDir.substring(platformDir.lastIndexOf('-') + 1)
 
                 def supportDirs = []
-                if (File.v.equals('/')) {
+                if (File.separator.equals('/')) {
                     new File(androidHome, '/extras/android/m2repository/com/android/support/support-v13').eachFile {
                         file ->
                             if (file.isDirectory()) {
