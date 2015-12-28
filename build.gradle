@@ -1,29 +1,37 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'http://dl.bintray.com/yunarta-kartawahyudi/maven'
+        }
+        maven {
+            url 'http://dl.bintray.com/yunarta-kartawahyudi/snapshot'
+        }
     }
+
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath "com.android.tools.build:gradle:2.0.0-alpha2"
+        classpath 'com.mobilesolutionworks:works-bintray-publish:1.0.0'
+        classpath 'com.mobilesolutionworks:works-jenkins-android-builder:1.0.0'
+        classpath 'com.mobilesolutionworks:works-autoconfig:1.0.0'
     }
 }
 
-group 'com.mobilesolutionworks'
-version '1.0.0'
 
 apply plugin: 'groovy'
+apply plugin: 'com.mobilesolutionworks.jenkins-configure'
+apply plugin: 'com.mobilesolutionworks.bintray-publish'
+
+group 'com.mobilesolutionworks'
+version jenkins.version("1.0.1")
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile gradleApi()
-    testCompile group: 'junit', name: 'junit', version: '4.11'
 }
-
-
-apply from: 'https://raw.githubusercontent.com/yunarta/works-gradle-script/master/publish-works.gradle'
 
 worksPublish {
     bintray {
@@ -41,5 +49,3 @@ worksPublish {
     gitUrl = 'https://github.com/yunarta/works-autoconfig-android.git'
 
 }
-
-apply from: 'https://raw.githubusercontent.com/yunarta/works-gradle-script/master/publish-bintray-for-java-lib-nojavadoc.gradle'

@@ -40,8 +40,8 @@ public class AutoConfigPlugin implements Plugin<Project> {
 
         def writable = new File(tmpDir).canWrite()
 
-        def repositoryXml = new File(tmpDir + '/auto-configure.repository.xml')
-        def addOnXml = new File(tmpDir + '/auto-configure.addon.xml')
+        def repositoryXml = new File(tmpDir + File.pathSeparator + 'auto-configure.repository.xml')
+        def addOnXml = new File(tmpDir + File.pathSeparator + 'auto-configure.addon.xml')
 
         def downloadRepository = !repositoryXml.exists() || repositoryXml.lastModified() + (24 * 60 * 60) < System.currentTimeMillis()
         def downloadAddOn = !addOnXml.exists() || addOnXml.lastModified() + (24 * 60 * 60) < System.currentTimeMillis()
@@ -150,14 +150,14 @@ public class AutoConfigPlugin implements Plugin<Project> {
                 }
 
                 def buildToolsList = []
-                new File(androidHome + '/build-tools').eachFile {
+                new File(androidHome, 'build-tools').eachFile {
                     file -> buildToolsList.add(file.name)
                 }
 
                 autoBuildTools = mostRecentVersion(buildToolsList)
 
                 def platformDirs = []
-                new File(androidHome + '/platforms').eachFile {
+                new File(androidHome, '/platforms').eachFile {
                     file -> platformDirs.add(file.name)
                 }
 
@@ -166,11 +166,21 @@ public class AutoConfigPlugin implements Plugin<Project> {
                 autoCompileSdk = platformDir.substring(platformDir.lastIndexOf('-') + 1)
 
                 def supportDirs = []
-                new File(androidHome + '/extras/android/m2repository/com/android/support/support-v13').eachFile {
-                    file ->
-                        if (file.isDirectory()) {
-                            supportDirs.add(file.name)
-                        }
+                if (File.pathSeparator.equals('/')) {
+                    new File(androidHome, '/extras/android/m2repository/com/android/support/support-v13').eachFile {
+                        file ->
+                            if (file.isDirectory()) {
+                                supportDirs.add(file.name)
+                            }
+                    }
+                } else {
+                    new File(androidHome, 'extras\\android\\m2repository\\com\\android\\support\\support-v13').eachFile {
+                        file ->
+                            if (file.isDirectory()) {
+                                supportDirs.add(file.name)
+                            }
+                    }
+
                 }
 
                 autoRepositoryRevision = mostRecentVersion(supportDirs)
